@@ -4,17 +4,17 @@ require "tty-prompt"
 require "rspec"
 $prompt = TTY::Prompt.new
 
-def price_list(parts)
+def inventory(parts)
     # puts "Parts available in stock and the price per part:"
-    puts "Part\t    Price"
+    puts "Part\t    Stock"
     parts.each do |part|
-        puts "#{part[:name].capitalize}: $#{part[:price]}"
+        puts "#{part[:name].capitalize}: #{part[:quantity]}"
     end
 end
 
 def search_part(parts)
     puts "Enter part name."
-    part_name = ets.chomp
+    part_name = gets.chomp
     if parts.any?{|part| part[:name] == part_name}
         puts "Part is available".green
     else
@@ -23,29 +23,29 @@ def search_part(parts)
 end
 
 def add_part(parts)
-    puts "Enter product name."
+    puts "Enter part name."
     part_name = gets.chomp
-    puts "Enter #{part_name} price."
-    part_price = gets.chomp.to_f
-    part = {name: part_name, price: part_price}
+    puts "Enter #{part_name} received quantity."
+    received_quantity = gets.chomp.to_i
+    part = {name: part_name, quantity: received_quantity}
     parts.push(part)
-    puts "Adding #{part_name}"
+    puts "#{part_name} has been added as a new part in stock".green
 end
 
-def modify_price(parts)
+def received_stock(parts)
     puts "Enter part name."
     part_name=gets.chomp
     if parts.any?{|part| part[:name] == part_name}
-        puts "Enter #{part_name} price."
-        part_price=gets.chomp.to_f
+        puts "Enter #{part_name} received quantity."
+        received_quantity=gets.chomp.to_i
         parts.each do |part|
             if part[:name] == part_name
-                part[:price] = part_price
+                part[:quantity] = part[:quantity] + received_quantity
             end
         end
-        puts "#{part_name} price has been updated to $#{part_price}".green
+        puts "#{part[:quantity] + received_quantity} #{part_name} are now available in stock".green
     else
-        puts "#{part_name} is an invalid input.".red
+        puts "#{part_name} is an invalid item, please add a new part.".red
     end
     # def yes_or_no
     #     return $prompt.yes?("Do you want to go back to the main menu?")
@@ -73,7 +73,7 @@ def delete_part(parts)
         confirm = gets.chomp
         if confirm == "y"
             parts.delete_if{|part| part[:name] == part_name}
-            puts "#{part_name} has been deleted."
+            puts "#{part_name} has been deleted.".red
         else
             puts "Request has been cancelled".green
         end
@@ -82,35 +82,35 @@ end
 
 
 parts = [
-    {name: "alternator", price: 120.0},
-    {name: "battery", price: 90.0},
-    {name: "starter motor", price: 130.0},
-    {name: "brakes", price: 110.0},
-    {name: "distributor", price: 130.0},
-    {name: "spark plug", price: 40.0},
-    {name: "shock absorber", price: 100.0},
-    {name: "ignition", price: 90.0},
-    {name: "radiator", price: 150.0}
+    {name: "alternator", quantity: 120},
+    {name: "battery", quantity: 90},
+    {name: "starter motor", quantity: 130},
+    {name: "brakes", quantity: 110},
+    {name: "distributor", quantity: 130},
+    {name: "spark plug", quantity: 40},
+    {name: "shock absorber", quantity: 100},
+    {name: "ignition", quantity: 90},
+    {name: "radiator", quantity: 150}
 ]
 $prompt = TTY::Prompt.new
 
 def menu_selection
     return $prompt.select("Please select from the below menu",
-    ["Price List", "Search for part", "Add Part", "Modify Price", "Delete Part", "Exit"])
+    ["Inventory", "Search for part", "Add Part", "Receive Stock", "Delete Part", "Exit"])
 end
 
 answer = ""
 while answer != "Exit"
     answer = menu_selection
     case answer
-        when "Price List"
-            price_list(parts)
+        when "Inventory"
+            inventory(parts)
         when "Search for Part"
             search_part(parts)
         when "Add part"
             add_part(parts)
-        when "Modify Price"
-            modify_price(parts)
+        when "Receive Stock"
+            received_stock(parts)
         when "Delete Part"
             delete_part(parts)
         else
