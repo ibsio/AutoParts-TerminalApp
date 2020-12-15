@@ -1,61 +1,120 @@
 require "colorize"
+require "colorized_string"
 require "tty-prompt"
 require "rspec"
-require_relative("./parts.rb")
+$prompt = TTY::Prompt.new
 
-# brands = [
-#     Brand.new("Audi", "Germany")
-#     Brand.new("Mercedes", "Germany")
-#     Brand.new("BMW", "Germany")
-#     Braand.new("Volkswagen", "Germany")
-#     Brand.new("Toyota", "Japam")
-#     Brand.new("Lexus", "Japan")
-#     Brand.new("Infiniti", "Japan")
-#     Brand.new("Holden", "Australia")
-#     Brand.new("Lamborghini", "Italy")
-#     Brand.new("Ferrari", "Italy")
-#     Brand.new("Ford", "United States of America")
-#     Brand.new("Aston Martin", "United Kingdom")
-# ]
+def price_list(parts)
+    # puts "Parts available in stock and the price per part:"
+    puts "Part\t    Price"
+    parts.each do |part|
+        puts "#{part[:name].capitalize}: $#{part[:price]}"
+    end
+end
 
-# parts = [
-#     Part.new("Alternator", 120, "001", 20),
-#     Part.new("Battery", 90, "002", 30),
-#     Part.new("Starter Motor", 130, "003", 10),
-#     Part.new("Brakes", 110, "004", 40),
-#     Part.new("Distributor", 130, "005", 10),
-#     Part.new("Spark Plug", 40, "006", 75),
-#     Part.new("Shock Absorber", 100, "007", 15),
-#     Part.new("Ignition", 90, "008", 7),
-#     Part.new("Radiator", 150, "009", 5)
-# ]
-# $prompt = TTY::Prompt.new
+def search_part(parts)
+    puts "Enter part name."
+    part_name = ets.chomp
+    if parts.any?{|part| part[:name] == part_name}
+        puts "Part is available".green
+    else
+        puts "#{part_name} is not available.".red
+    end
+end
 
-# def selection_menu
-#     return $prompt.select("Please select from the below menu", ["Print Inventory", "Search for a part", "Add Part", "Modify Price", "Delete Part", "Exit"])
-# end
-# def select_inventory
-#     return print_parts
-#     $parts.print_parts
-# end
-# def print_inventory(part_name, quantity, part_code, part_price)
-#     inventory = parts.find_part(part_name, quantity, part_code, part_price*quantity)
-#     inventory.print_parts
-# end
+def add_part(parts)
+    puts "Enter product name."
+    part_name = gets.chomp
+    puts "Enter #{part_name} price."
+    part_price = gets.chomp.to_f
+    part = {name: part_name, price: part_price}
+    parts.push(part)
+    puts "Adding #{part_name}"
+end
 
-# selection_menu
+def modify_price(parts)
+    puts "Enter part name."
+    part_name=gets.chomp
+    if parts.any?{|part| part[:name] == part_name}
+        puts "Enter #{part_name} price."
+        part_price=gets.chomp.to_f
+        parts.each do |part|
+            if part[:name] == part_name
+                part[:price] = part_price
+            end
+        end
+        puts "#{part_name} price has been updated to $#{part_price}".green
+    else
+        puts "#{part_name} is an invalid input.".red
+    end
+    # def yes_or_no
+    #     return $prompt.yes?("Do you want to go back to the main menu?")
+    #     end
+    #     answer = ""
+    #     while answer != "Exit"
+    #         answer = (y/n)
+    #         case answer
+    #         when "y"
+    #             menu_selection
+    #         else
+    #             puts "Exit"
+    #             system "clear"
+    #     end
+    # end
+end
 
-alternator = Part.new("Alternator", "001", 120, 20)
-battery = Part.new("Battery", "002", 90, 30)
-starter_motor = Part.new("Starter Motor", "003", 130, 10)
-brakes = Part.new("Brakes", "004", 110, 40)
-distributor = Part.new("Distributor", "005", 130, 10)
-spark_plug = Part.new("Spark Plug", "006", 40, 75)
-shock_absorber = Part.new("Shock Absorber", "007", 100, 15)
-ignition = Part.new("Ignition", "008", 90, 7)
-radiator = Part.new("Radiator", "009", 150, 5)
 
-puts alternator
-puts battery
-puts radiator
-puts alternator.name
+
+def delete_part(parts)
+    puts "Enter part name."
+    part_name = gets.chomp
+    if parts.any?{|part| part[:name] == part_name}
+        puts "Are you sure you want to delete the #{part_name}?".red + "(y/n)"
+        confirm = gets.chomp
+        if confirm == "y"
+            parts.delete_if{|part| part[:name] == part_name}
+            puts "#{part_name} has been deleted."
+        else
+            puts "Request has been cancelled".green
+        end
+    end
+end
+
+
+parts = [
+    {name: "alternator", price: 120.0},
+    {name: "battery", price: 90.0},
+    {name: "starter motor", price: 130.0},
+    {name: "brakes", price: 110.0},
+    {name: "distributor", price: 130.0},
+    {name: "spark plug", price: 40.0},
+    {name: "shock absorber", price: 100.0},
+    {name: "ignition", price: 90.0},
+    {name: "radiator", price: 150.0}
+]
+$prompt = TTY::Prompt.new
+
+def menu_selection
+    return $prompt.select("Please select from the below menu",
+    ["Price List", "Search for part", "Add Part", "Modify Price", "Delete Part", "Exit"])
+end
+
+answer = ""
+while answer != "Exit"
+    answer = menu_selection
+    case answer
+        when "Price List"
+            price_list(parts)
+        when "Search for Part"
+            search_part(parts)
+        when "Add part"
+            add_part(parts)
+        when "Modify Price"
+            modify_price(parts)
+        when "Delete Part"
+            delete_part(parts)
+        else
+            puts "Exit"
+            # system "clear"
+        end
+    end
