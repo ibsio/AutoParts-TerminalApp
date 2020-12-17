@@ -103,23 +103,33 @@ def received_stock(parts)
 end
 
 def delete_part(parts)
-    puts "Enter part name."
-    part_name = gets.chomp
-    if parts.any?{|part| part[:name] == part_name}
-        puts "Are you sure you want to delete the #{part_name}?".red + "(y/n)"
-        confirm = gets.chomp
-        if confirm == "y"
-            parts.delete_if{|part| part[:name] == part_name}
-            puts "#{part_name} has been deleted.".red
-            yes_or_no
+    included = false
+    while !included
+        puts "Enter part name."
+        part_name = gets.chomp
+        if parts.any?{|part| part[:name] == part_name}
+            include = true
+            puts "Are you sure you want to delete the #{part_name}?".red + "(y/n)"
+            confirm = gets.chomp
+            if confirm == "y"
+                parts.delete_if{|part| part[:name] == part_name}
+                puts "#{part_name} has been deleted.".red
+                return yes_or_no
+            else
+                puts "Request has been cancelled".green
+                return yes_or_no
+            end
         else
-            puts "Request has been cancelled".green
-            return yes_or_no
+            puts "#{part_name} is an invalid input, please enter y to enter another part name or n to exit to the main menu.".red
+            answer = gets.chomp
+                if answer == "n"
+                return menu_selection
+                else
+                    puts "Confirm part name below."
+                end
         end
-    else
-        puts "Invalid input! please enter a valid part name.".red
-        delete_part(parts)
     end
+    return yes_or_no
 end
 
 def yes_or_no
