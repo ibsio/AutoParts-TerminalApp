@@ -4,6 +4,7 @@ require "tty-prompt"
 require "rspec"
 $prompt = TTY::Prompt.new
 
+
 def inventory(parts)
     puts "Part\t    Stock"
     parts.each do |part|
@@ -22,11 +23,11 @@ def search_part(parts)
                 puts part[:quantity]
             end
         end
-        yes_or_no
     else
         puts "#{part_name} is not available, please enter a valid part name below.".red
         search_part(parts)
     end
+    return yes_or_no
 end
 
 def add_part(parts, part_name)
@@ -39,26 +40,28 @@ def add_part(parts, part_name)
         if answer == "y"
             puts "Part name confirmation."
             received_stock(parts)
-            return yes_or_no
         else
             puts "Retry with a valid part name."
         end
         add_part(parts, part_name)
+        return yes_or_no
     end
     puts "Enter #{part_name} received quantity."
     received_quantity = gets.chomp.to_i
     part = {name: part_name, quantity: received_quantity}
     parts.push(part)
     puts "#{received_quantity} #{part_name} has been added as a new part in stock".green
-    sleep(2)
+    sleep(1)
     puts "Print inventory? (y/n)"
     answer=gets.chomp
     if answer == "y"
+        system "clear"
+        puts "Printing inventory..."
+        sleep(3)
         inventory(parts)
     else
         return yes_or_no
-    end
-    
+    end   
 end
 
 def received_stock(parts)
