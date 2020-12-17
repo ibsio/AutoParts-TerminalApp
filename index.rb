@@ -5,7 +5,6 @@ require "rspec"
 $prompt = TTY::Prompt.new
 
 def inventory(parts)
-    # puts "Parts available in stock and the price per part:"
     puts "Part\t    Stock"
     parts.each do |part|
         puts "#{part[:name].capitalize}: #{part[:quantity]}"
@@ -16,20 +15,45 @@ def search_part(parts)
     puts "Enter part name."
     part_name = gets.chomp
     if parts.any?{|part| part[:name] == part_name}
-        puts "Part is available".green
+        puts "#{part_name.capitalize} are available. Quantity available in stock is:".green
+        parts.each do |part|
+            if part[:name] == part_name
+                puts part[:quantity]
+            end
+        end
     else
         puts "#{part_name} is not available.".red
     end
 end
 
-def add_part(parts)
-    puts "Enter part name."
-    part_name = gets.chomp
-    puts "Enter #{part_name} received quantity."
-    received_quantity = gets.chomp.to_i
-    part = {name: part_name, quantity: received_quantity}
-    parts.push(part)
-    puts "#{part_name} has been added as a new part in stock".green
+def add_part(parts, part_name)
+        part_name == ""
+        puts "Enter part name."
+        part_name = gets.chomp
+        puts "Enter #{part_name} received quantity."
+        received_quantity = gets.chomp.to_i
+        part = {name: part_name, quantity: received_quantity}
+        parts.push(part)
+        puts "#{received_quantity} #{part_name} has been added as a new part in stock".green
+        sleep(2)
+        puts "Print inventory? (y/n)"
+        answer=gets.chomp
+        if answer == "y"
+        inventory(parts)
+        else
+            system "clear"
+        end
+            #yes_or_no
+            yn = $prompt.yes?("Do you want to go back to the main menu?")
+
+            if yn #if answer is Yes
+                return ""
+                #menu_selection
+            else
+                puts "Exit"
+                #system "clear"
+                return "Exit"
+            end
 end
 
 def received_stock(parts)
@@ -40,30 +64,25 @@ def received_stock(parts)
         received_quantity=gets.chomp.to_i
         parts.each do |part|
             if part[:name] == part_name
-                part[:quantity] = part[:quantity] + received_quantity
+                part[:quantity] += received_quantity
+                puts "#{part[:quantity]} #{part_name} are now available in stock".green
             end
         end
-        puts "#{part[:quantity] + received_quantity} #{part_name} are now available in stock".green
+        
     else
-        puts "#{part_name} is an invalid item, please add a new part.".red
+        puts "#{part_name} is an invalid item, would you like to add it? (y/n)".red
+        answer = gets.chomp
+        case answer
+        when "y" 
+            puts "For name confirmation!"
+            add_part(parts, part_name)
+        when "n"
+            received_stock
+        else 
+            puts "Invalid input please enter (y/n)!"
+        end
     end
-    # def yes_or_no
-    #     return $prompt.yes?("Do you want to go back to the main menu?")
-    #     end
-    #     answer = ""
-    #     while answer != "Exit"
-    #         answer = (y/n)
-    #         case answer
-    #         when "y"
-    #             menu_selection
-    #         else
-    #             puts "Exit"
-    #             system "clear"
-    #     end
-    # end
 end
-
-
 
 def delete_part(parts)
     puts "Enter part name."
@@ -77,6 +96,8 @@ def delete_part(parts)
         else
             puts "Request has been cancelled".green
         end
+    else
+        puts "Invalid input!".red
     end
 end
 
@@ -95,8 +116,8 @@ parts = [
 $prompt = TTY::Prompt.new
 
 def menu_selection
-    return $prompt.select("Please select from the below menu",
-    ["Inventory", "Search for part", "Add Part", "Receive Stock", "Delete Part", "Exit"])
+    return $prompt.select("Select an option.",
+    ["Inventory", "Search for Part", "Add Part", "Receive Stock", "Delete Part", "Exit"])
 end
 
 answer = ""
@@ -107,8 +128,8 @@ while answer != "Exit"
             inventory(parts)
         when "Search for Part"
             search_part(parts)
-        when "Add part"
-            add_part(parts)
+        when "Add Part"
+            answer = add_part(parts, "")
         when "Receive Stock"
             received_stock(parts)
         when "Delete Part"
