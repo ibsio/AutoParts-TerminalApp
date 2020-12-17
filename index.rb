@@ -14,18 +14,28 @@ def inventory(parts)
 end
 
 def search_part(parts)
-    puts "Enter part name."
-    part_name = gets.chomp
-    if parts.any?{|part| part[:name] == part_name}
-        puts "#{part_name.capitalize} are available. Quantity available in stock is:".green
-        parts.each do |part|
-            if part[:name] == part_name
-                puts part[:quantity]
+    included = false
+    while !included
+        puts "Enter part name."
+        part_name = gets.chomp
+        
+        if parts.any?{|part| part[:name] == part_name}
+            included = true
+            puts "#{part_name.capitalize} are available. Quantity available in stock is:".green
+            parts.each do |part|
+                if part[:name] == part_name
+                    puts part[:quantity]
+                end
+            end
+        else
+            puts "#{part_name} is not available, please enter y to enter another part name or n to exit to the main menu.".red
+            answer = gets.chomp
+            if answer == "n"
+               return menu_selection
+            else
+                puts "Confirm part name below."
             end
         end
-    else
-        puts "#{part_name} is not available, please enter a valid part name below.".red
-        search_part(parts)
     end
     return yes_or_no
 end
@@ -43,7 +53,6 @@ def add_part(parts, part_name)
         else
             puts "Retry with a valid part name."
         end
-        add_part(parts, part_name)
         return yes_or_no
     end
     puts "Enter #{part_name} received quantity."
