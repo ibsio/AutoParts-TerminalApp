@@ -1,11 +1,3 @@
-require_relative ("./methods.rb")
-require "colorize"
-require "colorized_string"
-require "tty-prompt"
-require "rspec"
-$prompt = TTY::Prompt.new
-
-
 def inventory(parts)
     puts "Part\t    Stock"
     parts.each do |part|
@@ -69,6 +61,8 @@ def add_part(parts, part_name)
         puts "Printing inventory..."
         sleep(3)
         inventory(parts)
+    else
+        return yes_or_no
     end   
 end
 
@@ -84,7 +78,8 @@ def received_stock(parts)
                 puts "#{part[:quantity]} #{part_name} are now available in stock".green
                 return yes_or_no
             end
-        end   
+        end
+        
     else
         puts "#{part_name} is an invalid item, would you like to add it? (y/n)".red
         answer = gets.chomp
@@ -143,42 +138,3 @@ def yes_or_no
         return "Exit"
     end 
 end
-
-
-parts = [
-    {name: "alternator", quantity: 120},
-    {name: "battery", quantity: 90},
-    {name: "starter motor", quantity: 130},
-    {name: "brakes", quantity: 110},
-    {name: "distributor", quantity: 130},
-    {name: "spark plug", quantity: 40},
-    {name: "shock absorber", quantity: 100},
-    {name: "ignition", quantity: 90},
-    {name: "radiator", quantity: 150}
-]
-$prompt = TTY::Prompt.new
-
-def menu_selection
-    return $prompt.select("Select an option.",
-    ["Inventory", "Search for Part", "Add Part", "Receive Stock", "Delete Part", "Exit"])
-end
-
-answer = ""
-while answer != "Exit"
-    answer = menu_selection
-    case answer
-        when "Inventory"
-            answer = inventory(parts)
-        when "Search for Part"
-            answer = search_part(parts)
-        when "Add Part"
-            answer = add_part(parts, "")
-        when "Receive Stock"
-            answer = received_stock(parts)
-        when "Delete Part"
-            answer = delete_part(parts)
-        else
-            puts "Exit"
-            system "clear"
-        end
-    end
