@@ -6,6 +6,28 @@ require "rspec"
 require "tty-font"
 $prompt = TTY::Prompt.new
 
+if ARGV[0] == "admin"
+    answer = "admin"
+elsif answer != "admin"
+    puts "Please enter your password.".red
+    answer = gets.chomp
+    if answer != "admin"
+    puts "Please enter a valid password.".red
+    answer = gets.chomp
+    end
+    if answer != "admin"
+    puts "Please enter a valid password.".red
+    answer = gets.chomp
+    end
+    if answer != "admin"
+    puts "This is your last attempt, please enter a valid password.".red
+    answer = gets.chomp
+    end
+end
+
+
+
+
 parts = [
     {name: "alternator", quantity: 120},
     {name: "battery", quantity: 90},
@@ -44,5 +66,5 @@ while answer != "Exit"
         else
             puts "Exit"
             system "clear"
-        end
     end
+end
