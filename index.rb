@@ -3,6 +3,7 @@ require "colorize"
 require "colorized_string"
 require "tty-prompt"
 require "rspec"
+require "tty-font"
 $prompt = TTY::Prompt.new
 
 parts = [
@@ -17,8 +18,12 @@ parts = [
     {name: "radiator", quantity: 150}
 ]
 
+font = TTY::Font.new(:doom)
+puts font.write("WELCOME  TO")
+puts font.write("AUTO   PARTS")
+
 def menu_selection
-    return $prompt.select("Select an option.",
+    return $prompt.select("Please select an option.",
     ["Inventory", "Search for Part", "Add Part", "Receive Stock", "Delete Part", "Exit"])
 end
 

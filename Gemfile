@@ -13,3 +13,7 @@ gem "tty-prompt", "~> 0.22.0"
 gem "rspec", "~> 3.10"
 
 gem "tty-table", "~> 0.12.0"
+
+gem "tabulo", "~> 2.6"
+
+gem "tty-font", "~> 0.5.0"

@@ -14,10 +14,10 @@ def search_part(parts)
         
         if parts.any?{|part| part[:name] == part_name}
             included = true
-            puts "#{part_name.capitalize} are available. Quantity available in stock is:".green
+            puts "#{part_name.capitalize} are available. Quantity available in stock is:".yellow
             parts.each do |part|
                 if part[:name] == part_name
-                    puts part[:quantity]
+                    puts part[:quantity].to_s.yellow
                 end
             end
         else
@@ -78,8 +78,7 @@ def received_stock(parts)
                 puts "#{part[:quantity]} #{part_name} are now available in stock".green
                 return yes_or_no
             end
-        end
-        
+        end 
     else
         puts "#{part_name} is an invalid item, would you like to add it? (y/n)".red
         answer = gets.chomp
@@ -127,11 +126,9 @@ end
 
 def yes_or_no
     y = $prompt.yes?("Do you want to go back to the main menu?")
-
-    if y #if answer is yes
+    if y
         system "clear"
         return ""
-        #menu_selection
     else
         puts "Exit"
         system "clear"
