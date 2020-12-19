@@ -2,7 +2,6 @@ require_relative ("./methods.rb")
 require "colorize"
 require "colorized_string"
 require "tty-prompt"
-require "rspec"
 require "tty-font"
 $prompt = TTY::Prompt.new
 
