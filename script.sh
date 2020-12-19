@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/zsh
 
+echo $1
 
-ruby index.rb
+ruby index.rb $1
