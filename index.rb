@@ -5,27 +5,12 @@ require "tty-prompt"
 require "tty-font"
 $prompt = TTY::Prompt.new
 
-if ARGV[0] == "admin"
-    answer = "admin"
-elsif answer != "admin"
-    puts "Please enter your password.".red
-    answer = gets.chomp
-    if answer != "admin"
-    puts "Please enter a valid password.".red
-    answer = gets.chomp
-    end
-    if answer != "admin"
-    puts "Please enter a valid password.".red
-    answer = gets.chomp
-    end
-    if answer != "admin"
-    puts "This is your last attempt, please enter a valid password.".red
-    answer = gets.chomp
-    end
+if ARGV.length > 0
+    name = ARGV[0]
+else
+    print "What is your name? "
+    name = gets.chomp
 end
-
-
-
 
 parts = [
     {name: "alternator", quantity: 120},
@@ -42,6 +27,7 @@ parts = [
 font = TTY::Font.new(:doom)
 puts font.write("WELCOME  TO")
 puts font.write("AUTO   PARTS")
+puts font.write("#{name}").green
 
 def menu_selection
     return $prompt.select("Please select an option.",
