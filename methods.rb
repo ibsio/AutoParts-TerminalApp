@@ -1,10 +1,3 @@
-# class InvalidInput < StandardError
-# end
-
-# def validate_input(part_name)
-#     raise InvalidInput if (part_name.length == 0)        
-# end    
-
 def inventory(parts)
     puts "Part\t    Stock"
     parts.each do |part|
@@ -18,12 +11,6 @@ def search_part(parts)
     while !included
         puts "Enter part name."
         part_name = gets.chomp
-        # begin
-        #     validate_input(part_name)
-        # rescue
-        #     puts "Please enter a valid input.".red
-        #     return false
-        # end
         if parts.any?{|part| part[:name] == part_name}
             included = true
             puts "#{part_name.capitalize} are available. Quantity available in stock is:".yellow
@@ -33,6 +20,7 @@ def search_part(parts)
                 end
             end
         else
+            # this block from the code handles the error in case the user enters an invalid input or unavailable part name.
             puts "#{part_name} is an invalid and/or not available, please enter y to enter another part name or n to exit to the main menu."
             part_name = gets.chomp
             if part_name == "n"
@@ -81,13 +69,18 @@ end
 def received_stock(parts)
     puts "Enter part name."
     part_name=gets.chomp
+    # this if statemnt handles an error in case user entered a part name that doesn't exist in the stock so it offers to Add part instead.
     if parts.any?{|part| part[:name] == part_name}
         puts "Enter #{part_name} received quantity."
         received_quantity=gets.chomp.to_i
+        # this if statement is to handle the error in case the user entered the integer 0 or a string and it doesn't count floats
+        if received_quantity < 1
+            puts "Please enter a valid quantity."
+        end
         parts.each do |part|
             if part[:name] == part_name
                 part[:quantity] += received_quantity
-                puts "#{part[:quantity]} #{part_name} are now available in stock".green
+                puts "#{part[:quantity]} #{part_name} are currently available stock.".green
                 return yes_or_no
             end
         end 
@@ -113,11 +106,11 @@ def delete_part(parts)
         part_name = gets.chomp
         if parts.any?{|part| part[:name] == part_name}
             include = true
-            puts "Are you sure you want to delete the #{part_name}?".red + "(y/n)"
+            puts "Are you sure you want to remove #{part_name} from the stock?".red + "(y/n)"
             confirm = gets.chomp
             if confirm == "y"
                 parts.delete_if{|part| part[:name] == part_name}
-                puts "#{part_name} has been deleted.".red
+                puts "#{part_name} have been removed from stock.".red
                 return yes_or_no
             else
                 puts "Request has been cancelled".green
