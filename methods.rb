@@ -1,3 +1,10 @@
+# class InvalidInput < StandardError
+# end
+
+# def validate_input(part_name)
+#     raise InvalidInput if (part_name.length == 0)        
+# end    
+
 def inventory(parts)
     puts "Part\t    Stock"
     parts.each do |part|
@@ -11,7 +18,12 @@ def search_part(parts)
     while !included
         puts "Enter part name."
         part_name = gets.chomp
-        
+        # begin
+        #     validate_input(part_name)
+        # rescue
+        #     puts "Please enter a valid input.".red
+        #     return false
+        # end
         if parts.any?{|part| part[:name] == part_name}
             included = true
             puts "#{part_name.capitalize} are available. Quantity available in stock is:".yellow
@@ -21,9 +33,9 @@ def search_part(parts)
                 end
             end
         else
-            puts "#{part_name} is not available, please enter y to enter another part name or n to exit to the main menu.".red
-            answer = gets.chomp
-            if answer == "n"
+            puts "#{part_name} is an invalid and/or not available, please enter y to enter another part name or n to exit to the main menu."
+            part_name = gets.chomp
+            if part_name == "n"
                return menu_selection
             else
                 puts "Confirm part name below."
@@ -80,9 +92,9 @@ def received_stock(parts)
             end
         end 
     else
-        puts "#{part_name} is an invalid item, would you like to add it? (y/n)".red
-        answer = gets.chomp
-        case answer
+        puts "#{part_name} is an invalid item, would you like to add part? (y/n)".red
+        part_name = gets.chomp
+        case part_name
         when "y" 
             puts "For name confirmation!"
             add_part(parts, part_name)
