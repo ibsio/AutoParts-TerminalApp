@@ -37,6 +37,7 @@ def add_part(parts, part_name)
     part_name == ""
     puts "Enter part name."
     part_name = gets.chomp
+    # this part of the code handles an error in case the user entered a part name that is already in stock, the app offers the user to divert to "Receive Stock" option or go back to the main menu.
     if parts.any?{|part| part[:name] == part_name}
         puts "Part already available in stock! Do you want to receive stock? (y/n)"
         answer=gets.chomp
@@ -48,11 +49,16 @@ def add_part(parts, part_name)
         end
         return yes_or_no
     end
+    # this block handles an erro in case user entered a string instead of an integer.
     puts "Enter #{part_name} received quantity."
     received_quantity = gets.chomp.to_i
+    if received_quantity < 1
+        puts "Please enter a valid quantity."
+        received_quantity = gets.chomp.to_i
+    end
     part = {name: part_name, quantity: received_quantity}
     parts.push(part)
-    puts "#{received_quantity} #{part_name} has been added as a new part in stock".green
+    puts "#{received_quantity} #{part_name} has been received and new item has been added to the stock list".green
     sleep(1)
     puts "Print inventory? (y/n)"
     answer=gets.chomp
@@ -99,6 +105,7 @@ def received_stock(parts)
     end
 end
 
+# this method was written while taken in consideration the fact that the user might enter an invalid part name.
 def delete_part(parts)
     included = false
     while !included
