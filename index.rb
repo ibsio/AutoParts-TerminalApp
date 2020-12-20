@@ -8,7 +8,7 @@ $prompt = TTY::Prompt.new
 if ARGV.length > 0
     name = ARGV[0]
 else
-    print "What is your name? "
+    puts "Please enter your name.? "
     name = gets.chomp
 end
 
@@ -25,9 +25,9 @@ parts = [
 ]
 
 font = TTY::Font.new(:doom)
-puts font.write("WELCOME  TO")
-puts font.write("AUTO   PARTS")
-puts font.write("#{name}").green
+puts font.write("WELCOME  TO").green
+puts font.write("AUTO   PARTS").green
+puts font.write("#{name}").blue
 
 def menu_selection
     return $prompt.select("Please select an option.",
