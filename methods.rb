@@ -21,7 +21,7 @@ def search_part(parts)
             end
         else
             # this block from the code handles the error in case the user enters an invalid input or unavailable part name.
-            puts "#{part_name} is an invalid and/or not available, please enter y to enter another part name or n to exit to the main menu."
+            puts "#{part_name} is an invalid and/or not available, please enter y to enter another part name or n to exit to the main menu.".red
             part_name = gets.chomp
             if part_name == "n"
                return menu_selection
