@@ -1,4 +1,4 @@
-# terminal_app
+# Auto Parts "Terminal App"
 
 A basic concept for a car parts stock management. It is programmed based on Ruby programming language and requires your computer terminal to run it.
 
